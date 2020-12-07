@@ -1,26 +1,39 @@
 <?php 
-	session_start();
-	
+    session_start();
+    
 
 			if (isset($_SESSION['id'])) {
 				require 'connection.php';
 				$id = $_SESSION['id'];
-                $sql = "SELECT user_id, user_email_or_phone, user_fullname, user_username, user_profile_pic FROM users WHERE user_id= '$id'";
-                $postSql = "SELECT * FROM posts WHERE user_id= '$id'";
-
-				$queryDb = $con->query($sql);
-				$a = $queryDb->fetch_assoc();
-                //print_r($a);
                 
-               $queryPost = $con->query($postSql);
-                $post = $queryPost->fetch_all();
+                 $q = "SELECT users.user_id, users.user_email_or_phone, users.user_fullname, 
+                users.user_username, users.user_profile_pic, users.user_bio,posts.post_id,posts.file_name,
+                posts.file_text,posts.post_date,posts.post_time,posts.post_tag FROM `users` 
+                JOIN posts ON users.user_id=posts.user_id WHERE users.user_id= $id GROUP BY post_tag    ORDER BY posts.post_id DESC ";
+                 $queryP = $con->query($q);
+                 $k = $queryP->fetch_all();
+                //print_r($k[0]);
+                $user = $k[0];
+                
+                //$sql = "SELECT user_id, user_email_or_phone, user_fullname, user_username, user_profile_pic, user_bio FROM users WHERE user_id= '$id'";
+                //$postSql = "SELECT * FROM posts WHERE user_id= '$id'";
+                //$postSql = "SELECT * FROM posts WHERE user_id= '$id' GROUP BY post_tag";
+				//$queryDb = $con->query($sql);
+				//$a = $queryDb->fetch_assoc();
+                //print_r($a);
+
+               
+                
+            //    $queryPost = $con->query($postSql);
+            //     $post = $queryPost->fetch_all();
                 //print_r($post);
-                //print_r($queryPost);
+               // print_r($queryPost);
                 
                  
-                $_SESSION['fullname'] = $a['user_fullname'];
-                $_SESSION['username'] = $a['user_username'];
-                $_SESSION['profilePic'] = $a['user_profile_pic'];
+                $_SESSION['fullname'] = $user[2];
+                $_SESSION['username'] = $user[3];
+                $_SESSION['profilePic'] = $user[4];
+                $_SESSION['bio']        = $user[5];
             
 
 				//echo "<a href='logout.php'>log out</a>";
@@ -38,7 +51,10 @@
 <title>Instagram</title>
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 </head>
 <body>
 
@@ -49,7 +65,7 @@
         
         <div class="col-4">
             
-            <div class="input-group" style="margin-top:20px; margin-left: 80px;">
+            <div class="input-group" style="margin-top:15px; margin-left: 80px;">
                 <div class="input-group-prepend">
                   
                   <span class="input-group-text bg-light fa fa-search" style="border: none;"></span>
@@ -63,12 +79,13 @@
         </div>
         <div class="col-4" style="margin-top:10px; padding-left: 50px;">
                 <span class="fa fa-home fa-2x ml-2"></span>
-                <span class="fa fa-send-o fa-2x ml-4"></span>
-                <span class="fa fa-compass fa-2x ml-4"></span>
-                <span class="fa fa-heart-o fa-2x ml-4"></span>
+                <span class="fa fa-send-o fa-2x ml-2"></span>
+                <span class="fa fa-compass fa-2x ml-2"></span>
+                <span class="fa fa-heart-o fa-2x ml-2"></span>
                 <span > <?php echo "
-                        <img style='width: 25px; margin-left:20px; margin-top:-10px; height: 25px; border-radius: 40px;' src='uploads/{$_SESSION['profilePic']}'/>
-                        "; ?></span>
+                <img style='width: 25px; margin-left:20px; margin-top:-10px; height: 25px; border-radius: 40px;' src='uploads/{$_SESSION['profilePic']}'/>
+                "; ?><a href="logout.php"><button class="btn btn-sm btn-light" style="float:right">Log out</button></a></span>
+               
         </div>
     </div>
     
@@ -79,8 +96,6 @@
             
 
                            <?php if (($_SESSION['profilePic'])=='') {
-                                $_SESSION['fullname'] = $a['user_fullname'];
-                                $_SESSION['id'] = $a['user_id'];
                            echo '<div style="width: 150px; height: 150px; border-radius: 75px; background-color: white;">
         
                             <a href="uploadprofilepic.php"><span style="margin:38%" class="fa fa-plus">Add profile picture</span></a>
@@ -96,14 +111,14 @@
         <div class="col-4">
             <div><?php if (isset($_SESSION['username'])) {
                             echo $_SESSION['username'];
-                        }?> <span style="margin-left: 10px;">
+                        }?> <span style="margin-left: 10px;"><a href="editprofileform.php">
                 <button class="btn btn-sm" style="border: 1px solid;">Edit Profile
-                </button></span>
-                <span style="margin-left: 10px;" class=" fa fa-spin fa-spinner fa-2x"></span>
+                </button></a></span>
+                <span style="margin-left: 10px;" class=" fa  fa-spinner fa-2x"></span>
             </div>
 
             <div style="margin-top: 10px;">
-                <p><span><?php $num =$queryPost->num_rows; 
+                <p><span><?php $num =$queryP->num_rows; 
                  echo $num; ?> posts </span> 
                  <span  style="margin-left: 20px;">0 following</span>
                      <span  style="margin-left: 20px;">0 follower</span></p>
@@ -115,7 +130,9 @@
                             echo $_SESSION['fullname'];
                         }?> </p>
                 
-                <p>Bio</p>
+                <p><?php if (isset($_SESSION['bio'])) {
+                            echo $_SESSION['bio'];
+                        }else{echo 'Bio';}?> </p></p>
             
             </div>
 
@@ -137,16 +154,16 @@
                  <div class='card-deck'>
                 <?php
                 
-                if ($post) {
+                if ($k) {
                    
                     //print_r($b);
                    
                        
-                            foreach($post as $pst){  
+                            foreach($k as $pst){  
                              echo "
                              
                             <div class='m-3 bg-light'>
-                             <a href='post.php?id=$pst[0]'><img style='width: 300px; height: 290px;' src='uploads/{$pst[2]}'/></a>
+                             <a href='post.php?id=$pst[11]'><img style='width: 300px; height: 290px;' src='uploads/{$pst[7]}'/></a>
                             </div>
                             
                               
