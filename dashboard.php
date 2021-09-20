@@ -5,15 +5,53 @@
 			if (isset($_SESSION['id'])) {
 				require 'connection.php';
 				$id = $_SESSION['id'];
+
+                $postSql = "SELECT * FROM posts WHERE user_id= '$id'";
+                $check = $con->query($postSql);
                 
-                 $q = "SELECT users.user_id, users.user_email_or_phone, users.user_fullname, 
-                users.user_username, users.user_profile_pic, users.user_bio,posts.post_id,posts.file_name,
-                posts.file_text,posts.post_date,posts.post_time,posts.post_tag FROM `users` 
-                JOIN posts ON users.user_id=posts.user_id WHERE users.user_id= $id GROUP BY post_tag    ORDER BY posts.post_id DESC ";
-                 $queryP = $con->query($q);
-                 $k = $queryP->fetch_all();
+                
+                $queryP= '';
+                $k= '' ;
+                
+                $_SESSION['fullname'] = '';
+                $_SESSION['username'] = '';
+                $_SESSION['profilePic'] = '';
+                $_SESSION['bio']        = '';
+                
+                if($check->num_rows >0){
+                    $q = "SELECT users.user_id, users.user_email_or_phone, users.user_fullname, 
+                    users.user_username, users.user_profile_pic, users.user_bio,posts.post_id,posts.file_name,
+                    posts.file_text,posts.post_date,posts.post_time,posts.post_tag FROM `users` 
+                    JOIN posts ON users.user_id=posts.user_id WHERE users.user_id= $id GROUP BY post_tag    ORDER BY posts.post_id DESC ";
+                     $queryP = $con->query($q);
+                     $k = $queryP->fetch_all();  
+                     
+                     $user = $k[0];
+
+                     $_SESSION['fullname'] = $user[2];
+                     $_SESSION['username'] = $user[3];
+                     $_SESSION['profilePic'] = $user[4];
+                     $_SESSION['bio']        = $user[5];
+                 
+                
+                }else{
+                    $sql = "SELECT user_id, user_email_or_phone, user_fullname, user_username, user_profile_pic, user_bio FROM users WHERE user_id= '$id'";
+                    $queryP = $con->query($sql);
+                    $m = $queryP->fetch_all(); 
+
+                    $user = $m[0];
+
+                    $_SESSION['fullname'] = $user[2];
+                    $_SESSION['username'] = $user[3];
+                    $_SESSION['profilePic'] = $user[4];
+                    $_SESSION['bio']        = $user[5];
+                }
+                
+                 
                 //print_r($k[0]);
-                $user = $k[0];
+                  
+              
+               
                 
                 //$sql = "SELECT user_id, user_email_or_phone, user_fullname, user_username, user_profile_pic, user_bio FROM users WHERE user_id= '$id'";
                 //$postSql = "SELECT * FROM posts WHERE user_id= '$id'";
@@ -58,14 +96,14 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="row" style="background-color:#FFFFFF; height: 50px;">
-        <div class="col-4"><h3 style="margin-top:20px; margin-left: 80px;">Instagram<h3>
+<div class="container-fluid">
+    <div class="row" style="background-color:#FFFFFF; height: 50px; padding-left: 80px; padding-right: 50px;">
+        <div class="col-sm-3"><h3 style="margin-top:10px;">Instagram<h3>
         </div>
         
-        <div class="col-4">
+        <div class="col-sm-4">
             
-            <div class="input-group" style="margin-top:15px; margin-left: 80px;">
+            <div class="input-group " style="margin-top:15px; margin-left: 50px;">
                 <div class="input-group-prepend">
                   
                   <span class="input-group-text bg-light fa fa-search" style="border: none;"></span>
@@ -75,23 +113,25 @@
                     <span class="input-group-text bg-light fa fa-close" style="border: none;"></span>
                 </div>
             </div>
+
+            
               
         </div>
-        <div class="col-4" style="margin-top:10px; padding-left: 50px;">
-                <span class="fa fa-home fa-2x ml-2"></span>
+        <div class="col-sm-5" style="margin-top:10px; padding-left: 50px;">
+                <a href="home.php"><span class="fa fa-home fa-2x ml-2"></span></a>
                 <span class="fa fa-send-o fa-2x ml-2"></span>
                 <span class="fa fa-compass fa-2x ml-2"></span>
                 <span class="fa fa-heart-o fa-2x ml-2"></span>
                 <span > <?php echo "
-                <img style='width: 25px; margin-left:20px; margin-top:-10px; height: 25px; border-radius: 40px;' src='uploads/{$_SESSION['profilePic']}'/>
+                <a href='dashboard.php'><img style='width: 25px; margin-left:20px; margin-top:-10px; height: 25px; border-radius: 40px;' src='uploads/{$_SESSION['profilePic']}'/></a>
                 "; ?><a href="logout.php"><button class="btn btn-sm btn-light" style="float:right">Log out</button></a></span>
                
         </div>
     </div>
     
-    <div class="row bg-light pt-5">
+    <div class="row bg-light pt-5" style="padding-left: 200px">
     
-        <div class="col-4">
+        <div class="col-sm-4">
             
             
 
@@ -108,13 +148,12 @@
     
         </div>
         
-        <div class="col-4">
+        <div class="col-sm-4">
             <div><?php if (isset($_SESSION['username'])) {
                             echo $_SESSION['username'];
                         }?> <span style="margin-left: 10px;"><a href="editprofileform.php">
                 <button class="btn btn-sm" style="border: 1px solid;">Edit Profile
                 </button></a></span>
-                <span style="margin-left: 10px;" class=" fa  fa-spinner fa-2x"></span>
             </div>
 
             <div style="margin-top: 10px;">
@@ -143,14 +182,14 @@
         <hr>  
         
         
-    <div class="col-12"><hr/></div> 
+    <div class="col-sm-12 " style=" padding-right: 200px"><hr/></div> 
     
     </div>
     
 
-    <div class="row bg-light">
+    <div class="row bg-light "  style="padding-left: 200px; padding-right: 200px">
 
-        <div class="col-12">
+        <div class="col-sm-12">
                  <div class='card-deck'>
                 <?php
                 

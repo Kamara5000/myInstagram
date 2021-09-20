@@ -15,16 +15,19 @@ session_start()
 <body>
 
 
-    
-    <div style="width:100%; height: 100%; align-items: center; margin: auto;">
-    
-		<div class="card mt-5" style="width: 25%; height: 100%; align-items: center; margin: auto; padding: 10px;" >
-        <div class="text-danger"><?php 
-		if (isset($_SESSION['regError'])) {
-			echo $_SESSION['regError'];
-		}
-        ?></div>
-        <div style="text-align: center; padding: 15px;">
+<div class="container-fluid">
+	<div class = "row">
+		<div class="col-sm-12 col-md-8  mx-auto mb-5">
+    		<!-- <div class="bg-warning" style="width:100%; height: 100%; align-items: center; margin: auto;"> -->
+			<div class="col-sm-12 col-md-8  mx-auto">
+			<div class="card mt-5" style="width: 100%; height: 100%; align-items: center;  padding: 10px;" >
+        		<div class="text-danger"><?php 
+					if (isset($_SESSION['regError'])) {
+						echo $_SESSION['regError'];
+			 		}
+        		?></div>
+        
+			<div style="text-align: center; padding: 15px;">
 				<h1>Instagram</h1>
 				<p>Sign up to see photos and videos from your friend</p>
 				
@@ -36,16 +39,16 @@ session_start()
 					Log in with facebook</button>
 			</div>
 	
-			<div style="padding: 15px; width: 100%;">
+			<div style="padding: 15px; width: 100%; height: 100%">
 				<diV style="text-align:  center;">
-				<form method="POST"  action="signUp.php"  enctype="multipart/form-data">
+				<form method="POST"  action="signUp.php"  enctype="multipart/form-data" style="width: 100%; height: 100%">
 					<input class="form-control bg-light  mt-2"  type="text" name="emailOrPhone" placeholder="mobile number or email">
-					<input class="form-control bg-light mt-2" type="text" name="fullname" placeholder="full name">
+					<input class="form-control bg-light  mt-2" type="text" name="fullname" placeholder="full name">
 					<input class="form-control bg-light  mt-2" type="text" name="username" placeholder="username">
 					<input class="form-control bg-light mt-2" type="password" name="password" placeholder="password">
 					<button class="form-control bg-primary mt-2" type="submit" name="submit" >Sign up</button>
 				</form>
-			</diV>
+				</diV>
 			<div style="text-align: center; padding: 15px;">
 				
 				<small>By signing up, you agree to our Terms , Data Policy and Cookies Policy .</small>			
@@ -53,15 +56,18 @@ session_start()
 		</div>
 
 	
-		<div class="card mt-2" style="height: 100%; align-items:  center;  padding: 10px;" >
-			<p>Have an account? <a href="">Log in</a></p>
+		<div class="card mt-1" style="height: 100%; align-items:  center;  padding: 10px;" >
+			<p>Have an account? <a href="/myInstagram/loginform.php">Log in</a></p>
 		
 		</div>
 
 	</div>
+	</div>
+</div>
 	<?php 
 	session_unset();
 
 	?>
+	
 </body>
 </html>

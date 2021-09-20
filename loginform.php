@@ -11,8 +11,10 @@ session_start()
 </head>
 <body>
 
+<div class="container-fluid">
+    <div class="row">
    <div  
-   class="mt-5" style="width: 25%; height: 100%; align-items: center; margin: auto; padding: 10px;">
+   class="mt-5 col-sm-8   m-auto" style="width: 100%; height: 100%; align-items: center; padding: 10px;">
    <div class="text-success" style="text-align: center">
    
    <?php 
@@ -33,16 +35,18 @@ session_start()
 
     
 
-    <div class="card " style="width: 100%; height: 100%; align-items: center; margin: auto; padding: 10px;">
+    <div class="card  col-sm-12 p-3 mx-auto" style="width: 100%; height: 100%; align-items: center; margin-top: 10%; font-size:30px;">
     
-    <div class="text-success">Sign In</div>
-    <form action="login.php"  method="POST">
-    <input class="form-control bg-light mt-2" type="text" name="emailOrPhone" placeholder="email or phone">
-    <input class="form-control bg-light mt-2" type="password" name="password" placeholder="password">
-    <input class="form-control btn btn-sm btn-success mt-2" type="submit" name="submit" value="Sign In">
+    <div class="text-success"><h1>Sign In</h1></div>
+    <form action="login.php"  method="POST" class="col-sm-8">
+    <input class="form-control w-100 bg-light mt-5" style="width: 100%" type="text" name="emailOrPhone" placeholder="email or phone">
+    <input class="form-control bg-light mt-5" type="password" name="password" placeholder="password">
+    <button class=" btn btn-lg  btn-success mt-5" type="submit" name="submit" style= "margin-left:40%; ">Sign In</button>
     </form>
     </div>
    </div>
+</div>
+</div>
 
 <?php 
 session_unset();
